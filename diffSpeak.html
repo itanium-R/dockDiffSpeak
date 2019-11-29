@@ -14,35 +14,22 @@
         var newArr = newStr.split('\n');
         var oldLen = oldArr.length;
         var newLen = newArr.length;
+        var difStr = "";
         
         if(newArr.length > 0){
-          var p = 0;
-          var difStr = "";
-          for(i = 0; i < newLen; i++){
-            if(p < oldLen){
-              //console.log(oldArr[p], newArr[i], oldArr[p] == newArr[i]);
-              if(oldArr[p] == newArr[i]){
-                p++;
-              }else{              
-                var jSt = p, j;
-                for(j = p+1; j < oldLen-2; j++){
-                  //console.log("[j]", oldArr[j], newArr[i], oldArr[j] == newArr[i]);
-                  if(oldArr[j] == newArr[i]&&oldArr[j+1] == newArr[i+1]
-                                           &&oldArr[j+1] == newArr[i+1]){
-                    break;
-                  }
-                }
-                if(j　==　(oldLen-2)){
-                  difStr += newArr[i];
-                }else{
-                  p=j+1;
-                }
+          for(var i = 0; i < newLen; i++){
+            var j;
+            for(j = 0; j < oldLen; j++){
+              if(newArr[i] == oldArr[j]){
+                break;
               }
-            }else{
-              difStr += newArr[i];
+            }
+            if(j == oldLen){
+              difStr += newArr[i]+"\n";
             }
           }
         }
+        
         oldStr = newStr;
         return difStr;
       }
@@ -92,7 +79,6 @@
   <body>
   <label>Diff</label><hr>
   <textarea id="out"></textarea>
-  <button onclick="getDocBodyTxt()">test</button>
     
   </body>
 </html>
