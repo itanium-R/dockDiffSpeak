@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body{font-size:1.6em;}
+      textarea{width:95%; height:80vh;font-size:2em;}
+    </style>
+    <script>
+      // cf: https://qa.itmedia.co.jp/qa9003149.html
+      var oldStr = "";
+      function getDiff(newStr){
+        var oldArr = oldStr.split('');
+        var newArr = newStr.split('');
+        var oldLen = oldArr.length;
+        var newLen = newArr.length;
+        
+        if(newArr.length > 0){
+          var p = 0;
+          var addstr = "";
+          for(i = 0; i < newLen; i++){
+            if(oldArr[p]){
+              console.log(oldArr[p], newArr[i], oldArr[p] == newArr[i]);
+              if(oldArr[p] == newArr[i]){
+                p++;
+              }else{
+                addstr += newArr[i];
+              }
+            }else{
+              addstr += newArr[i];
+            }
+          }
+        }
+        oldStr = newStr;
+        return addstr;
+      }
+      
+      function getDiffAndUttr(str){
+        const MAX_DIFF_LEN = 30;
+        var diff = getDiff(str);
+        if(diff.length > MAX_DIFF_LEN){
+          diff = diff.substr(0, MAX_DIFF_LEN);
+        }
+        document.getElementById("out").value = diff;
+        uttrStr(diff);
+      }
+
+      function initoldStr(str){
+        google.script.run.withSuccessHandler((s)=>{oldStr=s;})
+              .getBodyTxt();
+      }
+      
+      window.onload = () => {
+        initoldStr();
+        setInterval(getDocBodyTxt,10000);
+      }
+      
+      function getDocBodyTxt(){
+        google.script.run.withSuccessHandler(getDiffAndUttr)
+              .getBodyTxt();
+      }
+      
+      try{
+        const uttr = new SpeechSynthesisUtterance();
+        uttr.lang = "ja";
+      }catch(e){
+        alert("このブラウザは音声合成非対応です．\n"+e)
+      }
+      function uttrStr(str){
+        if(str.length){
+          const uttr = new SpeechSynthesisUtterance();
+          uttr.lang = "ja";
+          uttr.text = str;
+          speechSynthesis.speak(uttr);
+        }
+      }
+      
+    </script>
+  </head>
+  <body>
+  <label>Diff</label><hr>
+  <textarea id="out"></textarea>
+  <button onclick="getDocBodyTxt()">test</button>
+    
+  </body>
+</html>
+
+
