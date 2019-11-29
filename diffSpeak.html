@@ -10,8 +10,8 @@
       // cf: https://qa.itmedia.co.jp/qa9003149.html
       var oldStr = "";
       function getDiff(newStr){
-        var oldArr = oldStr.split('');
-        var newArr = newStr.split('');
+        var oldArr = oldStr.split('\n');
+        var newArr = newStr.split('\n');
         var oldLen = oldArr.length;
         var newLen = newArr.length;
         
@@ -19,7 +19,7 @@
           var p = 0;
           var difStr = "";
           for(i = 0; i < newLen; i++){
-            if(oldArr[p]){
+            if(p < oldLen){
               //console.log(oldArr[p], newArr[i], oldArr[p] == newArr[i]);
               if(oldArr[p] == newArr[i]){
                 p++;
@@ -48,7 +48,7 @@
       }
       
       function getDiffAndUttr(str){
-        const MAX_DIFF_LEN = 30;
+        const MAX_DIFF_LEN = 50;
         var diff = getDiff(str);
         if(diff.length > MAX_DIFF_LEN){
           diff = diff.substr(0, MAX_DIFF_LEN);
